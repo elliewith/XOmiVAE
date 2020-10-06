@@ -3,10 +3,10 @@ import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
 import pandas as pd
-from Refactoring.exprVAEwithAdditionalFeatures import ExprOmiVAE
-from Refactoring import generalHelperFunctions as GeneralHelper
-from Refactoring import shapExplainerHelper as ShapHelper
-from Refactoring.dimensionKnockOutExperiments import nullingDimensions
+from exprVAEwithAdditionalFeatures import ExprOmiVAE
+import generalHelperFunctions as GeneralHelper
+import shapExplainerHelper as ShapHelper
+from dimensionKnockOutExperiments import nullingDimensions
 
 import sys
 sys.path.insert(0, '~/PycharmProjects/shapLundberg')

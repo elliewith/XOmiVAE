@@ -3,10 +3,10 @@ import numpy as np
 from torch.nn import functional as F
 from sklearn import metrics
 import pandas as pd
-from Refactoring.exprVAEwithAdditionalFeatures import ExprOmiVAE
+from exprVAEwithAdditionalFeatures import ExprOmiVAE
 
-from Refactoring import shapExplainerHelper as ShapHelper
-from Refactoring import generalHelperFunctions as GeneralHelper
+import shapExplainerHelper as ShapHelper
+import generalHelperFunctions as GeneralHelper
 
 
 def nullingDimensions(sample_id,expr_df,diseaseCode,chosenTissue,dimension,device='cpu'):
@@ -61,7 +61,7 @@ def nullingDimensions(sample_id,expr_df,diseaseCode,chosenTissue,dimension,devic
 
     def changeWeightandBias(weightZero=False, weightOne=False, weightReverse=False, changeOutput=True, dim_number=0, vae_mod=vae_model,
                             disease_code=1, norm_expr_tensor=0, tumour_expr_tensor=0):
-        vae_mod.load_state_dict(torch.load('/Users/ewithnell/PycharmProjects/OmiVAESecondAttempt/data/vae_saved_model(original).pt', map_location=torch.device('cpu')))
+        vae_mod.load_state_dict(torch.load('DataSources/vae_saved_model(original).pt', map_location=torch.device('cpu')))
         vae_mod.eval()
         with torch.no_grad():
 
@@ -77,7 +77,7 @@ def nullingDimensions(sample_id,expr_df,diseaseCode,chosenTissue,dimension,devic
 
             elif changeOutput == True:
                 vae_mod.load_state_dict(
-                    torch.load('/Users/ewithnell/PycharmProjects/OmiVAESecondAttempt/data/vae_saved_model(original).pt',
+                    torch.load('DataSources/vae_saved_model(original).pt',
                                map_location=torch.device('cpu')))
                 vae_mod.eval()
         getAccuracyOfModel(disease_code, vae_mod, norm_expr_tensor, tumour_expr_tensor,dim_number)
@@ -103,7 +103,7 @@ def nullingDimensions(sample_id,expr_df,diseaseCode,chosenTissue,dimension,devic
         norm_expr_tensor = extract_relevantExpr(expr_df, conditionalnormal)
         tumour_expr_tensor = extract_relevantExpr(expr_df, conditionaltumour)
         #saved pickle file of omiVAE we are using
-        vae_model.load_state_dict(torch.load('/Users/ewithnell/PycharmProjects/OmiVAESecondAttempt/data/vae_saved_model(original).pt', map_location=torch.device('cpu')))
+        vae_model.load_state_dict(torch.load('DataSources/vae_saved_model(original).pt', map_location=torch.device('cpu')))
         vae_model.eval()
 
         print("normal before")
@@ -123,12 +123,12 @@ def nullingDimensions(sample_id,expr_df,diseaseCode,chosenTissue,dimension,devic
                             norm_expr_tensor=norm_expr_tensor, tumour_expr_tensor=tumour_expr_tensor)
 
         print("change output of model")
-        from Refactoring.exprVAEwithAdditionalFeatures import ExprOmiVAE
+        from exprVAEwithAdditionalFeatures import ExprOmiVAE
         input_path="DataSources/GDC-PANCAN_"
         vae_model_two = ExprOmiVAE(input_path=input_path, expr_df=expr_df, latent_dim=128, knockingOut=True, dimension_number=dim_number)
 
         vae_model_two.load_state_dict(
-            torch.load('/Users/ewithnell/PycharmProjects/OmiVAESecondAttempt/data/vae_saved_model(original).pt',
+            torch.load('DataSources/vae_saved_model(original).pt',
                        map_location=torch.device('cpu')))
 
         vae_model_two.eval()

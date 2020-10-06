@@ -1,5 +1,5 @@
 import torch
-from Refactoring import generalHelperFunctions as helper
+import generalHelperFunctions as helper
 import numpy as np
 
 from sklearn.model_selection import train_test_split

@@ -1,11 +1,11 @@
 import torch
-from Refactoring import generalHelperFunctions as helper
+import generalHelperFunctions as helper
 import numpy as np
 
-from Refactoring.exprVAEwithAdditionalFeatures import ExprOmiVAE
-from Refactoring import generalHelperFunctions as GeneralHelper
-from Refactoring import shapExplainerHelper as ShapHelper
-from Refactoring import disentanglingBarChartPlots as barChartHelper
+from exprVAEwithAdditionalFeatures import ExprOmiVAE
+import generalHelperFunctions as GeneralHelper
+import shapExplainerHelper as ShapHelper
+import disentanglingBarChartPlots as barChartHelper
 from scipy import stats
 import matplotlib.pyplot as plt
 import seaborn as sns
