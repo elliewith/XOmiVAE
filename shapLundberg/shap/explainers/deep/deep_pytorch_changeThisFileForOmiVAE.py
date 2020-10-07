@@ -5,21 +5,16 @@ from distutils.version import LooseVersion
 torch = None
 
 
-# EXPLAINING THE Z DIMENSION
+# This is the main file that was changed to allow OmiVAE to be explained
 class PyTorchDeepExplainer(Explainer):
     """
-    File needs to replace: shapLundberg/explainers/deep/deep_pytorch_changeThisFileForOmiVAE.py
-
-    This class has been adapted to explain the latent dimensions. It is important that the correct output of the model
-    (0=z dimension, 2=mean) as well as the dimension within this latent space. This needs to take place in both
-    the init function, and the gradient function.
-
+    This class has been adapted to explain OmiVAE. It is important that the correct output of the model
+    (0=z dimension, 2=mean) as well as the dimension within this latent space. We allow a dimension to be chosen to explain from, and adjustable outputs to be explained. 
     Lundberg et al., 2017: http://papers.nips.cc/paper/7062-a-unified-approach-to-interpreting-model-predictions.pdf
     """
 
     def __init__(self, model, data,outputNumber,dim ,explainLatentSpace):
         # try and import pytorch
-
         global torch
         if torch is None:
             import torch
