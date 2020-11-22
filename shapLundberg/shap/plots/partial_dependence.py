@@ -1,4 +1,4 @@
-import shap
+import shapLundberg.shap
 from ..common import convert_name
 import warnings
 try:

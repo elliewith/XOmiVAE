@@ -115,7 +115,7 @@ def saveShapValues(shap_vals, gene, chrom, ranked_output=True):
 
 def getGenes(expr_df):
     # get genes and chromosomes
-    gencode_ids = pd.read_csv('../data/gencodev22annotationgene.tsv', sep='\t', header=0, index_col=0)
+    gencode_ids = pd.read_csv('DataSources/gencodev22annotationgene.tsv', sep='\t', header=0, index_col=0)
     new = expr_df.merge(gencode_ids, left_index=True, right_index=True, how='left')
     genes = new.iloc[:, -5]
     chrom = new.iloc[:, -4]

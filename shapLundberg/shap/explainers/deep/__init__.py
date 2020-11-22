@@ -1,8 +1,8 @@
 #from shapLundberg.plots.deep_pytorch_thisone import PyTorchDeepExplainer
-from shap.explainers.deep.deep_pytorch_changeThisFileForOmiVAE import PyTorchDeepExplainer
+from shapLundberg.shap.explainers.deep.deep_pytorch_changeThisFileForOmiVAE import PyTorchDeepExplainer
 from .deep_pytorch_changeThisFileForOmiVAE import PyTorchDeepExplainer
 from .deep_tf import TFDeepExplainer
-from shap.explainers.explainer import Explainer
+from shapLundberg.shap.explainers.explainer import Explainer
 
 
 class DeepExplainer(Explainer):

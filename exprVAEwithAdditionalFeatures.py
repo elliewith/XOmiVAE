@@ -237,16 +237,14 @@ def ExprOmiVAE(input_path, expr_df, random_seed=42, no_cuda=False, model_paralle
 
         def classifier(self, mean):
             #Output change (4th in figure) variant of OmiVAE knock-out experiments
+            #size of input x mean
             if knockingOut:
                 mean=mean.numpy()
-                #print("mean before")
-                #print(mean[:, dimension_number])
-                mean_overZero= mean[:, dimension_number] > 0
-                mean_Zero =mean[:, dimension_number] <= 0
+                dimension_number=85
+                mean_overZero = mean[:, dimension_number] > 0
+                mean_Zero = mean[:, dimension_number] <= 0
                 mean[:, dimension_number][mean_overZero] = 0.
                 mean[:, dimension_number][mean_Zero] = 1.
-                #print("mean after")
-                #print(mean[:, dimension_number])
                 mean=torch.from_numpy(mean)
             level_1_layer = self.c_fc1(mean)
             level_2_layer = self.c_fc2(level_1_layer)

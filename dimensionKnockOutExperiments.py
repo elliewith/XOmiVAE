@@ -66,8 +66,9 @@ def nullingDimensions(sample_id,expr_df,diseaseCode,chosenTissue,dimension,devic
         with torch.no_grad():
 
             if weightZero == True:
-                vae_mod.e_fc4_mean[0].bias[dim_number] = 0.
-                vae_mod.e_fc4_mean[0].weight[dim_number, :] = 0.
+                vae_mod.e_fc4_mean[0].weight[dim_number] = 0.
+                #vae_mod.e_fc4_mean[0].weight[dim_number, :] = 0.
+
             elif weightOne == True:
                 vae_mod.e_fc4_mean[0].weight[dim_number, :] = 1.
                 vae_mod.e_fc4_mean[0].bias[dim_number] = 200.
@@ -111,13 +112,15 @@ def nullingDimensions(sample_id,expr_df,diseaseCode,chosenTissue,dimension,devic
                            tumour_expr_tensor=tumour_expr_tensor,dim_number=dim_number)
         #print("weight of model before")
         #print(vae_model.e_fc4_mean[0].weight[dim_number, :])
-
+        
         print("weight set to zero")
         changeWeightandBias(weightZero=True, dim_number=dim_number, disease_code=disease_code,
                             norm_expr_tensor=norm_expr_tensor, tumour_expr_tensor=tumour_expr_tensor)
+       
         print("weight set to 1")
         changeWeightandBias(weightOne=True, dim_number=dim_number, vae_mod=vae_model, disease_code=disease_code,
                             norm_expr_tensor=norm_expr_tensor, tumour_expr_tensor=tumour_expr_tensor)
+       
         print("weight reversed")
         changeWeightandBias(weightReverse=True, dim_number=dim_number, vae_mod=vae_model, disease_code=disease_code,
                             norm_expr_tensor=norm_expr_tensor, tumour_expr_tensor=tumour_expr_tensor)

@@ -1,6 +1,6 @@
 
-import shap
-from shap.explainers.explainer import Explainer
+import shapLundberg.shap
+from shapLundberg.shap.explainers.explainer import Explainer
 import numpy as np
 from sklearn.model_selection import train_test_split
 

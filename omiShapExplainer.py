@@ -107,9 +107,13 @@ def omiShapExplainer(sample_id,label_array,expr_df,dimension=0,tumourID=0,device
         conditionthree = phenotype['sample_type'] == "Solid Tissue Normal"
         conditionaltumour = np.logical_and(conditionone, conditiontwo)
         conditionalnormal = np.logical_and(conditionthree, conditiontwo)
+
+
         # Recommended to have 100 samples, but in some cases it is not possible to sample 100 for a tissue type, especially for normal tissue
-        normal_expr = ShapHelper.splitExprandSample(condition=conditionalnormal, sampleSize=2, expr=expr_df)
-        tumour_expr = ShapHelper.splitExprandSample(condition=conditionaltumour, sampleSize=2, expr=expr_df)
+        #change background here; e.g. random training sample or normal tissue
+        normal_expr = ShapHelper.randomTrainingSample(expr_df, 50)
+        #normal_expr = ShapHelper.splitExprandSample(condition=conditionone, sampleSize=50, expr=expr_df)
+        tumour_expr = ShapHelper.splitExprandSample(condition=conditionaltumour, sampleSize=50, expr=expr_df)
         # Ensure tensor is on device and has the correct data type
         background = GeneralHelper.addToTensor(expr_selection=normal_expr, device=device)
         male_expr_tensor = GeneralHelper.addToTensor(expr_selection=tumour_expr, device=device)
@@ -117,6 +121,7 @@ def omiShapExplainer(sample_id,label_array,expr_df,dimension=0,tumourID=0,device
         GeneralHelper.checkPredictions(background, vae_model)
         GeneralHelper.checkPredictions(male_expr_tensor, vae_model)
         #output number is based from OmiVAE forward function. 4= predicted y value
+        #this should be c_fc1 for autoencoded layer
         e = shap.DeepExplainer((vae_model, vae_model.c_fc1), background, outputNumber=4)
 
         #explains layer before mean (512 dimensions)
@@ -208,13 +213,8 @@ def omiShapExplainer(sample_id,label_array,expr_df,dimension=0,tumourID=0,device
 
     if TestingNullingDimensions:
         #Example of testing four different dimensions
-        print("dim 83")
-        nullingDimensions(sample_id=sample_id,expr_df=expr_df,diseaseCode=tumourID, chosenTissue=tumourName, dimension=83)
-
+        print("dim 42")
+        nullingDimensions(sample_id=sample_id,expr_df=expr_df,diseaseCode=tumourID, chosenTissue=tumourName, dimension=42)
         print("dim 125")
         nullingDimensions(sample_id=sample_id,expr_df=expr_df,diseaseCode=tumourID, chosenTissue=tumourName, dimension=125)
 
-        print(" dim 75")
-        nullingDimensions(sample_id=sample_id,expr_df=expr_df,diseaseCode=tumourID, chosenTissue=tumourName, dimension=75)
-        print("dim 85")
-        nullingDimensions(sample_id=sample_id,expr_df=expr_df,diseaseCode=tumourID, chosenTissue=tumourName, dimension=85)

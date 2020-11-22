@@ -1,8 +1,8 @@
 import numpy as np
 import warnings
-from shap.explainers.explainer import Explainer
+from shapLundberg.shap.explainers.explainer import Explainer
 from distutils.version import LooseVersion
-from shap.explainers.tf_utils import _get_session, _get_graph, _get_model_inputs, _get_model_output
+from shapLundberg.shap.explainers.tf_utils import _get_session, _get_graph, _get_model_inputs, _get_model_output
 keras = None
 tf = None
 tf_ops = None

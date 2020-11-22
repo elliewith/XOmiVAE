@@ -6,8 +6,8 @@ try:
 except ImportError:
     warnings.warn("matplotlib could not be loaded!")
     pass
-from shap.plots import labels
-from shap.common import safe_isinstance, format_value
+from shapLundberg.shap.plots import labels
+from shapLundberg.shap.common import safe_isinstance, format_value
 from . import colors
 
 
