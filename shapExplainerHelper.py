@@ -121,7 +121,7 @@ def getGenes(expr_df):
     chrom = new.iloc[:, -4]
     return genes, chrom
 
-def getTopShapValues(shap_vals, numberOfTopFeatures, expr_df, ranked_output=True):
+def getTopShapValues(shap_vals, numberOfTopFeatures, expr_df, ranked_output=True, cancerType="TCGA-BRCA"):
     gene, chrom= getGenes(expr_df)
     if ranked_output==True:
         shap_value=shap_vals[0]
@@ -131,14 +131,33 @@ def getTopShapValues(shap_vals, numberOfTopFeatures, expr_df, ranked_output=True
 
     feature_importance = pd.DataFrame(list(zip(gene, chrom, vals)),columns=['gene', 'chrom', 'feature_importance_vals'])
     feature_importance.sort_values(by=['feature_importance_vals'], ascending=False, inplace=True)
+    #plotGenes(cancerType,feature_importance)
+
     mostImp_shap_values = feature_importance.head(numberOfTopFeatures)
+
+    feature_importance.to_csv(cancerType +"_feature_imp_normalvsTissue")
+    """
     print(mostImp_shap_values)
     print("least importance absolute values")
     feature_importance.sort_values(by=['feature_importance_vals'], ascending=True, inplace=True)
     leastImp_shap_values = feature_importance.head(numberOfTopFeatures)
     print(leastImp_shap_values)
-    return mostImp_shap_values, leastImp_shap_values
+    """
+    return mostImp_shap_values
 
+def plotGenes(cancertype,shap_values):
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+
+    shap_values = shap_values.head(10)
+    fig, axs = plt.subplots(ncols=1)
+    sns.set_style("white")
+    fig.tight_layout(pad=6.0)
+    sns.barplot(x="feature_importance_vals", y="gene", data=shap_values, color="skyblue", ax=axs)
+    axs.set(xlabel="Mean |SHAP value| ", ylabel="Gene")
+    axs.set_title(cancertype, pad=15)
+    plt.savefig(cancertype+".png", dpi=1500)
+    #plt.show()
 
 
 

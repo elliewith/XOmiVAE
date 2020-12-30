@@ -45,25 +45,39 @@ def omiShapExplainer(sample_id,label_array,expr_df,dimension=0,tumourID=0,device
             ShapHelper.randomTrainingSample(expr) function.
             """
         phenotype = GeneralHelper.processPhenotypeDataForSamples(sample_id)
+        print("cancer type is")
+        print(tumourName)
+
         conditionone=phenotype['sample_type'] == "Primary Tumor"
         conditiontwo=phenotype['project_id'] == tumourName
         conditionthree=phenotype['sample_type'] == "Solid Tissue Normal"
 
         conditionaltumour=np.logical_and(conditionone,conditiontwo)
+        """
         conditionalnormal = np.logical_and(conditiontwo, conditionthree)
         #recommended to have 100 samples, but in some cases it is not possible to sample 100 for a tissue type, especially for normal tissue
-        normal_expr = ShapHelper.splitExprandSample(condition=conditionalnormal, sampleSize=2, expr=expr_df)
-        tumour_expr = ShapHelper.splitExprandSample(condition=conditionaltumour, sampleSize=2, expr=expr_df)
+        print("count of normal tissue")
+        print(np.count_nonzero(conditionalnormal))
+        if np.count_nonzero(conditionalnormal) < 10:
+            normal_number=np.count_nonzero(conditionalnormal)
+        else:
+            normal_number=10
+        
+        normal_expr = ShapHelper.splitExprandSample(condition=conditionalnormal, sampleSize=normal_number, expr=expr_df)
+        """
+        normal_expr = ShapHelper.randomTrainingSample(expr_df, 50)
+        tumour_expr = ShapHelper.splitExprandSample(condition=conditionaltumour, sampleSize=10, expr=expr_df)
+
         # put on device as correct datatype
         background = GeneralHelper.addToTensor(expr_selection=normal_expr, device=device)
         male_expr_tensor = GeneralHelper.addToTensor(expr_selection=tumour_expr, device=device)
-        GeneralHelper.checkPredictions(background, vae_model)
+        GeneralHelper.checkPredictions(male_expr_tensor, vae_model)
 
         #output number is based from OmiVAE forward function. 4= predicted y value.
         e = shap.DeepExplainer(vae_model, background, outputNumber=4)
         shap_values_female = e.shap_values(male_expr_tensor, ranked_outputs=1)
-        most_imp, least_imp = ShapHelper.getTopShapValues(shap_vals=shap_values_female, numberOfTopFeatures=50,
-                                                          expr_df=expr_df, ranked_output=True)
+        most_imp  = ShapHelper.getTopShapValues(shap_vals=shap_values_female, numberOfTopFeatures=50,
+                                                          expr_df=expr_df, ranked_output=True, cancerType=tumourName)
 
     if NormalvsTumourDimensionExplain:
         """
@@ -93,7 +107,7 @@ def omiShapExplainer(sample_id,label_array,expr_df,dimension=0,tumourID=0,device
         #e = shap.DeepExplainer(vae_model, background)
         #as we are explaining the genes for a dimension (unlike previously where we had to choose which prediction we were explaining) we do not need to specifiy to rank the outputs
         shap_values_female = e.shap_values(male_expr_tensor)
-        most_imp, least_imp = ShapHelper.getTopShapValues(shap_vals=shap_values_female, numberOfTopFeatures=50,
+        most_imp = ShapHelper.getTopShapValues(shap_vals=shap_values_female, numberOfTopFeatures=50,
                                                           expr_df=expr_df, ranked_output=False)
 
     #Note: this can be easily adjusted to explain any two samples; simply change 'normal_expr' and 'tumour_expr' to the chosen samples
