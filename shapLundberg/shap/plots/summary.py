@@ -99,6 +99,10 @@ def summary_plot(shap_values, features=None, feature_names=None, max_display=Non
             assert False, shape_msg + " Perhaps the extra column in the shap_values matrix is the " \
                           "constant offset? Of so just pass shap_values[:,:-1]."
         else:
+            print("num features")
+            print(num_features)
+            print("feature shaps")
+            print(features.shape[1])
             assert num_features == features.shape[1], shape_msg
 
     if feature_names is None:
@@ -254,7 +258,10 @@ def summary_plot(shap_values, features=None, feature_names=None, max_display=Non
                     vmin = vmax
 
                 assert features.shape[0] == len(shaps), "Feature and SHAP matrices must have the same number of rows!"
-
+                print("feature shape")
+                print(features.shape[0])
+                print("shap")
+                print(len(shaps))
                 # plot the nan values in the interaction feature as grey
                 nan_mask = np.isnan(values)
                 pl.scatter(shaps[nan_mask], pos + ys[nan_mask], color="#777777", vmin=vmin,
