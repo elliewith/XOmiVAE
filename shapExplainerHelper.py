@@ -115,27 +115,44 @@ def saveShapValues(shap_vals, gene, chrom, ranked_output=True):
 
 def getGenes(expr_df):
     # get genes and chromosomes
-    gencode_ids = pd.read_csv('DataSources/gencodev22annotationgene.tsv', sep='\t', header=0, index_col=0)
+    gencode_ids = pd.read_csv('DataSources/gencodev22annotationgeneCOPY.tsv', sep='\t', header=0, index_col=0)
     new = expr_df.merge(gencode_ids, left_index=True, right_index=True, how='left')
+    print("new")
+    print(new)
     genes = new.iloc[:, -5]
     chrom = new.iloc[:, -4]
-    return genes, chrom
+    ensg = new.index
 
-def getTopShapValues(shap_vals, numberOfTopFeatures, expr_df, ranked_output=True, cancerType="TCGA-BRCA"):
-    gene, chrom= getGenes(expr_df)
-    if ranked_output==True:
-        shap_value=shap_vals[0]
-        vals = np.abs(shap_value[0]).mean(0)
+    return genes, chrom, ensg
+
+def getTopShapValues(shap_vals, numberOfTopFeatures, expr_df, ranked_output=True, cancerType="TCGA-BRCA",absolute=True):
+    gene, chrom, ensg = getGenes(expr_df)
+    if absolute:
+        if ranked_output==True:
+            print("here absolute and ranked")
+            shap_value=shap_vals[0]
+            vals = np.abs(shap_value[0]).mean(0)
+        else:
+            vals = np.abs(shap_vals).mean(0)
     else:
-        vals = np.abs(shap_vals).mean(0)
+        print("should not print here")
+        if ranked_output==True:
+            shap_value=shap_vals[0]
+            vals = shap_value[0].mean(0)
+        else:
+            print("should not print here")
+            vals = shap_vals.mean(0)
 
-    feature_importance = pd.DataFrame(list(zip(gene, chrom, vals)),columns=['gene', 'chrom', 'feature_importance_vals'])
+    #feature_importance = pd.DataFrame(list(zip(gene, chrom, ensg, vals)),columns=['gene', 'chrom', 'id', 'feature_importance_vals'])
+    feature_importance = pd.DataFrame(list(zip(gene, chrom, ensg, vals)),
+                                      columns=['gene', 'chrom', 'id', 'feature_importance_vals'])
     feature_importance.sort_values(by=['feature_importance_vals'], ascending=False, inplace=True)
     #plotGenes(cancerType,feature_importance)
 
     mostImp_shap_values = feature_importance.head(numberOfTopFeatures)
+    print(mostImp_shap_values)
 
-    feature_importance.to_csv(cancerType +"_feature_imp_normalvsTissue")
+    feature_importance.to_csv(cancerType +"_feature_imp_secondtry")
     """
     print(mostImp_shap_values)
     print("least importance absolute values")
