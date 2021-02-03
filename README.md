@@ -1,4 +1,4 @@
-# ExplainableOmiVAE
+# XOmiVAE
 
 This code explains the unsupervised and supervised part of the gene expression variant of OmiVAE, a model developed by Zhang et al., (2019). Paper [link](httpsarxiv.org/abs/1908.06278).
 
